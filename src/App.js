@@ -9,10 +9,7 @@ const App = () => {
     const [clickCount, setClickCount] = useState(0);
 
     useEffect(() => {
-        const newDesk = [...desk];
-        newDesk[0][0] = 1;
-        newDesk[9][9] = 2;
-        setDesk(newDesk);
+        resetGame();
     }, []);
 
     const foo = (n) => n > 0 ? 1 : n === 0 ? 0 : -1;
@@ -20,8 +17,16 @@ const App = () => {
     const inRange = (value, left, right) => value >= left && value < right;
 
     const closeForm = () => {
-        setDesk(Array.from({ length: 10 }, () => Array(10).fill(0)));
+        resetGame();
+    };
+
+    const resetGame = () => {
+        const newDesk = Array.from({ length: 10 }, () => Array(10).fill(0));
+        newDesk[0][0] = 1;
+        newDesk[9][9] = 2;
+        setDesk(newDesk);
         setClickCount(0);
+        setWhoTurn(true);
     };
 
     const changePlayer = (click = false) => {
@@ -164,7 +169,7 @@ const App = () => {
         if (!whoTurn) {
             botDoing();
         }
-    });
+    }, [whoTurn, desk]);
 
     useEffect(() => {
         let cPlayer = 0, cBot = 0;
@@ -177,12 +182,12 @@ const App = () => {
 
         if (cBot === 0 && cPlayer !== 0) {
             alert('Bot wins!');
-            closeForm();
+            resetGame();
         }
 
         if (cPlayer === 0 && cBot !== 0) {
             alert('Player wins!');
-            closeForm();
+            resetGame();
         }
     }, [desk]);
 
