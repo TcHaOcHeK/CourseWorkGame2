@@ -197,6 +197,11 @@ const App = () => {
         resetGame();
     };
 
+    const goToMenu = () => {
+        setGameMode(null);
+        resetGame();
+    };
+
     if (!gameMode) {
         return <Menu onStart={startGame} />;
     }
@@ -204,7 +209,7 @@ const App = () => {
     return (
         <div className="App">
             <GameBoard desk={desk} handleCellClick={handleCellClick} whoTurn={whoTurn} />
-            <Controls closeForm={closeForm} changePlayer={changePlayer} />
+            <Controls closeForm={closeForm} changePlayer={changePlayer} goToMenu={goToMenu} />
         </div>
     );
 };
