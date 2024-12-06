@@ -81,6 +81,8 @@ const App = () => {
                     newDesk[xClick][yClick] = 1;
                 }
                 break;
+            default:
+                break;
         }
         setDesk(newDesk);
         changePlayer(); // Передаем ход после каждого хода игрока
