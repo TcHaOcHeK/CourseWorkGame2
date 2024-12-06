@@ -1,32 +1,22 @@
 .App {
   text-align: center;
   margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  height: 100px; /* Уменьшаем размер логотипа */
+  margin-bottom: 20px; /* Добавляем отступ под логотипом */
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
 }
 
 @keyframes App-logo-spin {
@@ -64,6 +54,8 @@
 
 .controls {
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .controls button {
@@ -76,6 +68,11 @@
 .menu {
   text-align: center;
   margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
 .menu button {

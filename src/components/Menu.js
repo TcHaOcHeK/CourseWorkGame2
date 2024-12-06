@@ -1,11 +1,13 @@
 import React from 'react';
+import logo from './logo.png';
+import './Menu.css';
 
 const Menu = ({ onStart }) => {
     return (
         <div className="menu">
-            <h1>Выберите режим игры</h1>
-            <button onClick={() => onStart('player')}>Играть с другом</button>
-            <button onClick={() => onStart('bot')}>Играть с ботом</button>
+            <img src={logo} alt="Game Logo" className="App-logo" />
+            <button onClick={() => onStart('twoPlayers')}>Play Two Players</button>
+            <button onClick={() => onStart('bot')}>Play with Bot</button>
         </div>
     );
 };
