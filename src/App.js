@@ -1,16 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import GameBoard from './components/GameBoard.js';
 import Controls from './components/Controls.js';
+import Menu from './components/Menu.js';
 import './App.css';
 
 const App = () => {
     const [desk, setDesk] = useState(Array.from({ length: 10 }, () => Array(10).fill(0)));
     const [whoTurn, setWhoTurn] = useState(true);
     const [clickCount, setClickCount] = useState(0);
+    const [gameMode, setGameMode] = useState(null);
 
     useEffect(() => {
         resetGame();
     }, []);
+
+    useEffect(() => {
+        if (!whoTurn && gameMode === 'bot') {
+            botDoing();
+        }
+    }, [whoTurn, desk, gameMode]);
+
+    useEffect(() => {
+        let cPlayer = 0, cBot = 0;
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                if (desk[i][j] === 1) cPlayer++;
+                if (desk[i][j] === 2) cBot++;
+            }
+        }
+
+        if (cBot === 0 && cPlayer !== 0) {
+            alert('Bot wins!');
+            resetGame();
+        }
+
+        if (cPlayer === 0 && cBot !== 0) {
+            alert('Player wins!');
+            resetGame();
+        }
+    }, [desk]);
 
     const foo = (n) => n > 0 ? 1 : n === 0 ? 0 : -1;
 
@@ -94,9 +122,8 @@ const App = () => {
     };
 
     const botDoing = () => {
-        let minDistances = [];
-
         let minDistance = Infinity;
+        let minDistances = [];
 
         for (let i = 0; i < desk.length; i++) {
             for (let j = 0; j < desk[i].length; j++) {
@@ -105,8 +132,10 @@ const App = () => {
                         for (let y = 0; y < desk[x].length; y++) {
                             if (desk[x][y] === 2) {
                                 const distance = Math.abs(i - x) + Math.abs(j - y);
-                                if (distance <= minDistance) {
+                                if (distance < minDistance) {
                                     minDistance = distance;
+                                    minDistances = [{ xi: i, yi: j, xj: x, yj: y, len: distance }];
+                                } else if (distance === minDistance) {
                                     minDistances.push({ xi: i, yi: j, xj: x, yj: y, len: distance });
                                 }
                             }
@@ -115,8 +144,6 @@ const App = () => {
                 }
             }
         }
-
-        minDistances = minDistances.sort((a, b) => a.len - b.len);
 
         botClick(minDistances);
     };
@@ -165,31 +192,14 @@ const App = () => {
         }
     };
 
-    useEffect(() => {
-        if (!whoTurn) {
-            botDoing();
-        }
-    }, [whoTurn, desk]);
+    const startGame = (mode) => {
+        setGameMode(mode);
+        resetGame();
+    };
 
-    useEffect(() => {
-        let cPlayer = 0, cBot = 0;
-        for (let i = 0; i < 10; i++) {
-            for (let j = 0; j < 10; j++) {
-                if (desk[i][j] === 1) cPlayer++;
-                if (desk[i][j] === 2) cBot++;
-            }
-        }
-
-        if (cBot === 0 && cPlayer !== 0) {
-            alert('Bot wins!');
-            resetGame();
-        }
-
-        if (cPlayer === 0 && cBot !== 0) {
-            alert('Player wins!');
-            resetGame();
-        }
-    }, [desk]);
+    if (!gameMode) {
+        return <Menu onStart={startGame} />;
+    }
 
     return (
         <div className="App">

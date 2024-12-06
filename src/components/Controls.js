@@ -4,8 +4,8 @@ import './Controls.css';
 const Controls = ({ closeForm, changePlayer }) => {
     return (
         <div className="controls">
-            <button onClick={closeForm}>Close Game</button>
-            <button onClick={() => changePlayer(true)}>Change Player</button>
+            <button onClick={closeForm}>Начать заново</button>
+            <button onClick={() => changePlayer(true)}>Пропустить ход</button>
         </div>
     );
 };
