@@ -6,7 +6,39 @@
     <meta name="theme-color" content="#000000" />
     <meta name="main"/>
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <title>Viruses Game</title>
+    <link rel="icon" href="%PUBLIC_URL%/logo.png" />
+    <title>Viruses War</title>
+    <script src="/sdk.js"></script>
+    <script>
+      YaGames.init().then(ysdk => {
+        ysdk.adv.showFullscreenAdv();
+
+        const buttonElem = document.querySelector('#button');
+
+        let commonCounter = 0;
+        buttonElem.addEventListener('click', () => {
+          let counter = 0;
+
+          function getCallback(callbackName) {
+            return () => {
+              counter += 1;
+              commonCounter += 1;
+
+              console.log(`showFullscreenAdv; callback ${callbackName}; ${counter} call`);
+            }
+          }
+
+          ysdk.adv.showFullscreenAdv({
+            callbacks: {
+              onClose: getCallback('onClose'),
+              onOpen: getCallback('onOpen'),
+              onError: getCallback('onError'),
+              onOffline: getCallback('onOffline')
+            }
+          });
+        });
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
