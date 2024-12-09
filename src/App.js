@@ -15,6 +15,12 @@ const App = () => {
     }, []);
 
     useEffect(() => {
+        if (!whoTurn && gameMode === 'bot') {
+            botDoing();
+        }
+    }, [whoTurn, desk, gameMode]);
+
+    useEffect(() => {
         let cPlayer = 0, cBot = 0;
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 10; j++) {
@@ -24,16 +30,17 @@ const App = () => {
         }
 
         if (cBot === 0 && cPlayer !== 0) {
-            alert('Player 2 wins!');
+            alert(gameMode === 'bot' ? 'Bot wins!' : 'Player 2 wins!');
             resetGame();
         }
 
         if (cPlayer === 0 && cBot !== 0) {
-            alert('Player 1 wins!');
+            alert(gameMode === 'bot' ? 'Player wins!' : 'Player 1 wins!');
             resetGame();
         }
-    }, [desk]);
+    }, [desk, gameMode]);
 
+    const foo = (n) => n > 0 ? 1 : n === 0 ? 0 : -1;
 
     const inRange = (value, left, right) => value >= left && value < right;
 
@@ -113,6 +120,77 @@ const App = () => {
     const handleCellClick = (xClick, yClick) => {
         if (logicClick(xClick, yClick)) {
             logicPaint(xClick, yClick);
+        }
+    };
+
+    const botDoing = () => {
+        let minDistance = Infinity;
+        let minDistances = [];
+
+        for (let i = 0; i < desk.length; i++) {
+            for (let j = 0; j < desk[i].length; j++) {
+                if (desk[i][j] % 3 === 1) {
+                    for (let x = 0; x < desk.length; x++) {
+                        for (let y = 0; y < desk[x].length; y++) {
+                            if (desk[x][y] === 2) {
+                                const distance = Math.abs(i - x) + Math.abs(j - y);
+                                if (distance < minDistance) {
+                                    minDistance = distance;
+                                    minDistances = [{ xi: i, yi: j, xj: x, yj: y, len: distance }];
+                                } else if (distance === minDistance) {
+                                    minDistances.push({ xi: i, yi: j, xj: x, yj: y, len: distance });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        botClick(minDistances);
+    };
+
+    const botClick = (op) => {
+        if (op.length === 0) {
+            changePlayer(true); // Если нет доступных ходов, передаём ход игроку
+            return;
+        }
+
+        let n = 0;
+        let flag = false;
+        let dx = op[0].xj - op[0].xi !== 0 ? foo(op[0].xj - op[0].xi) : 1;
+        let dy = op[0].yj - op[0].yi !== 0 ? foo(op[0].yj - op[0].yi) : 1;
+
+        let xClick = Math.abs(op[n].xj - op[n].xi) >= Math.abs(op[n].yj - op[n].yi) ? op[n].xi + dx : op[n].xi;
+        let yClick = Math.abs(op[n].xj - op[n].xi) < Math.abs(op[n].yj - op[n].yi) ? op[n].yi + dy : op[n].yi;
+
+        if (desk[xClick][yClick] !== 2 && desk[xClick][yClick] % 3 !== 0) {
+            xClick = Math.abs(op[n].xj - op[n].xi) < Math.abs(op[n].yj - op[n].yi) ? op[n].xi + dx : op[n].xi;
+            yClick = Math.abs(op[n].xj - op[n].xi) >= Math.abs(op[n].yj - op[n].yi) ? op[n].yi + dy : op[n].yi;
+        }
+
+        while (n < op.length) {
+            if (logicClick(xClick, yClick) && (desk[xClick][yClick] === 2 || desk[xClick][yClick] === 0)) {
+                logicPaint(xClick, yClick);
+                break;
+            } else {
+                n++;
+                if (n >= op.length) {
+                    flag = !flag;
+                    break;
+                }
+
+                xClick = Math.abs(op[n].xj - op[n].xi) >= Math.abs(op[n].yj - op[n].yi) ? op[n].xi + dx : op[n].xi;
+                yClick = Math.abs(op[n].xj - op[n].xi) < Math.abs(op[n].yj - op[n].yi) ? op[n].yi + dy : op[n].yi;
+
+                if (desk[xClick][yClick] !== 2 && desk[xClick][yClick] % 3 !== 0) {
+                    xClick = Math.abs(op[n].xj - op[n].xi) < Math.abs(op[n].yj - op[n].yi) ? op[n].xi + dx : op[n].xi;
+                    yClick = Math.abs(op[n].xj - op[n].xi) >= Math.abs(op[n].yj - op[n].yi) ? op[n].yi + dy : op[n].yi;
+                }
+            }
+        }
+        if (flag) {
+            changePlayer(true);
         }
     };
 
