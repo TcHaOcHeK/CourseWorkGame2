@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import GameBoard from './components/GameBoard.js';
-import Controls from './components/Controls.js';
-import Menu from './components/Menu.js';
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+import GameBoard from './components/game/GameBoard.js';
+import Controls from './components/game/Controls.js';
+import Menu from './components/game/Menu.js';
 import './App.css';
 
 const App = () => {
