@@ -60,7 +60,7 @@ const App = () => {
     };
 
     const changePlayer = (click = false) => {
-        if (clickCount === 2 || click) {
+        if (clickCount === 2 || click ) {
             setClickCount(0);
             setWhoTurn(!whoTurn);
         }
@@ -73,28 +73,38 @@ const App = () => {
                 if (whoTurn) {
                     setClickCount(clickCount + 1);
                     newDesk[xClick][yClick] = 5;
+
+                    setDesk(newDesk);
+                    changePlayer();
                 }
                 break;
             case 2:
                 if (!whoTurn) {
                     setClickCount(clickCount + 1);
                     newDesk[xClick][yClick] = 4;
+
+                    setDesk(newDesk);
+                    changePlayer();
                 }
                 break;
             case 0:
                 if (whoTurn) {
                     setClickCount(clickCount + 1);
                     newDesk[xClick][yClick] = 2;
+
+                    setDesk(newDesk);
+                    changePlayer();
                 } else {
                     setClickCount(clickCount + 1);
                     newDesk[xClick][yClick] = 1;
+
+                    setDesk(newDesk);
+                    changePlayer();
                 }
                 break;
             default:
                 break;
         }
-        setDesk(newDesk);
-        changePlayer(); // Передаем ход после каждого хода игрока
     };
 
     const logicClick = (xClick, yClick) => {
@@ -153,6 +163,7 @@ const App = () => {
     };
 
     const botClick = (op) => {
+
         if (op.length === 0) {
             changePlayer(true); // Если нет доступных ходов, передаём ход игроку
             return;
